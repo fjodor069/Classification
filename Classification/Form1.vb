@@ -5,6 +5,8 @@
     ''' according to the Chinese Manufacturing Licensing of Pressure Vessels;
     ''' TSG R0004-2009 Supervision Regulations on Safety Technology for Stationary Pressure Vessel
     ''' fig. A1 and A2
+    ''' update for TSG 21-2016 
+    ''' fig A1 and A2 are changed
     ''' </summary>
     ''' <remarks></remarks>
     Enum type_medium
@@ -34,19 +36,27 @@
     Private vesselcategory As type_category
     Private licensinglevel As type_licensing
 
+    Dim numX As Integer = 8             ' number of divisions on X-axis
+    Dim numY As Integer = 5
+    Dim gmargin As Integer = 30
+
+    Dim bValid As Boolean = False
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'form load
 
         RadioButton1.Checked = True
         RadioButton2.Checked = False
-
+        mediumgroup = type_medium.medium1
+        PictureBox1.Invalidate()
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         'category button
 
         'get the input
+        'limit is P <= 350 MPa and V <= 1E6 m3
+        bValid = False
         Try
             P = Double.Parse(TextBox1.Text)
             V = Double.Parse(TextBox2.Text)
@@ -54,14 +64,33 @@
             MessageBox.Show("You must enter a value")
             Return
         End Try
-        'P = 1
-        'V = 1
-       
-        If RadioButton1.Checked Then
-            mediumgroup = type_medium.medium1
-        Else
-            mediumgroup = type_medium.medium2
+        'limit is P <= 350 and V <= 1E6
+        If (P > 350) Then
+            MessageBox.Show("Pressure > 350 is out of limits")
+            Return
         End If
+        If (V > 1000000.0) Then
+            MessageBox.Show("Volume > 1E6 is out of limits")
+            Return
+        End If
+        'also limit for negative values
+        If (P < 0.01) Then
+            MessageBox.Show("Pressure < 1e-2 is out of limits")
+            Return
+        End If
+        If (V < 0.01) Then
+            MessageBox.Show("Volume < 1e-2 is out of limits")
+            Return
+        End If
+
+
+
+
+
+        'we have a valid point , now redraw the picturebox
+        bValid = True
+        PictureBox1.Invalidate()
+
 
         If mediumgroup = type_medium.medium1 Then
             vesselcategory = DetermineCategoryA1(P, V)
@@ -92,7 +121,8 @@
 
         PrintResults()
 
-        DrawPicture()
+
+
 
     End Sub
 
@@ -109,86 +139,177 @@
             RadioButton1.Checked = False
         End If
 
+        If RadioButton1.Checked Then
+            mediumgroup = type_medium.medium1
+        ElseIf RadioButton2.Checked Then
+            mediumgroup = type_medium.medium2
+        End If
+
+        PictureBox1.Invalidate()
 
     End Sub
 
     'teken de grafiek in de picturebox
-    Private Sub DrawPicture()
+    Private Sub DrawPicture(g As Graphics)
 
 
-        Dim g As Graphics = PictureBox1.CreateGraphics()
-        Dim rect As Rectangle
-        Dim margin As Integer = 20
-        Dim numX As Integer = 10
-        Dim numY As Integer = 4
 
-        ' g.DrawLine(Pens.Black, 10, 10, 20, 20)
-        rect = New Rectangle(0 + margin, 0 + margin, PictureBox1.Width - margin * 2, PictureBox1.Height - margin * 2)
+        'text font for legenda
+        Dim TextFont As New System.Drawing.Font("Arial", 8, FontStyle.Regular)
+        Dim TextBrush As New System.Drawing.SolidBrush(Color.Blue)
+        Dim TextFont1 As New System.Drawing.Font("Arial", 10, FontStyle.Bold)
 
-        g.DrawRectangle(Pens.Blue, rect)
+        Dim TextBrush1 As New System.Drawing.SolidBrush(Color.BlueViolet)
+        Dim myMayorPen As New Pen(Brushes.Black, 1)
+        Dim myMinorPen As New Pen(Brushes.Gray, 1)
+
+        'clear the entire picture to remove points
+        g.Clear(Color.White)
+       
 
         'zet de origin op een ander punt
-        g.TranslateTransform(margin, PictureBox1.Height - margin)
+        g.TranslateTransform(gmargin, PictureBox1.Height - gmargin)
 
         Dim p1 As New Pen(Color.Black, 2)
         'teken de x -as 
-        Dim distX As Integer = PictureBox1.Width - margin * 2
-        Debug.Print("distX = " & distX)
+        Dim distX As Integer = PictureBox1.Width - gmargin * 2
+        ' Debug.Print("distX = " & distX)
 
         g.DrawLine(p1, 0, 0, distX, 0)
 
         'teken de y -as
-        Dim distY = PictureBox1.Height - margin * 2
-        Debug.Print("distY = " & distY)
+        Dim distY = PictureBox1.Height - gmargin * 2
+        'Debug.Print("distY = " & distY)
         g.DrawLine(p1, 0, 0, 0, -distY)
 
         'teken major gridlines verticaal
-        For i As Integer = 0 To numX - 1
+        'en de legenda op de x as
+        For i As Integer = 0 To numX
             Dim xdist As Integer = i / numX * distX
-            g.DrawLine(Pens.Blue, xdist, 0, xdist, -distY)
+            g.DrawLine(myMayorPen, xdist, 0, xdist, -distY)
+            g.DrawString("1e" & Format(i - 2, "0"), TextFont, TextBrush, xdist - 5, 0)
+            'Debug.Print(i)
         Next
+        g.DrawString("Volume (m3)", TextFont, TextBrush, distX / 2, 15)
 
         'teken minor gridlines verticaal
         For i As Integer = 0 To numX - 1
             Dim xdist As Integer = i / numX * distX
-            For j As Integer = 1 To 9
+            For j As Integer = 2 To 9
 
                 Dim logdist As Integer = Math.Log10(j) * (distX / numX) + xdist
-                g.DrawLine(Pens.Black, logdist, 0, logdist, -distY)
+                g.DrawLine(myMinorPen, logdist, 0, logdist, -distY)
 
             Next
         Next
 
         'teken major gridlines horizontaal
-        For i As Integer = 0 To numY - 1
+        'en schaal op de y as
+        For i As Integer = 0 To numY
             Dim ydist As Integer = i / numY * distY
-            g.DrawLine(Pens.Blue, 0, -ydist, distX, -ydist)
+            g.DrawLine(myMayorPen, 0, -ydist, distX, -ydist)
+
+            g.DrawString("1e" & Format(i - 2, "0"), TextFont, TextBrush, 0 - gmargin + 5, -ydist - 8)
+
         Next
+
+        g.DrawString("Pressure (MPa)", TextFont, TextBrush, -gmargin + 5, -distY - gmargin)
+
 
         'teken minor gridlines horizontaal
         For i As Integer = 0 To numY - 1
             Dim ydist As Integer = i / numY * distY
-            For j As Integer = 1 To 9
+            For j As Integer = 2 To 9
 
                 Dim logdist As Integer = Math.Log10(j) * (distY / numY) + ydist
-                g.DrawLine(Pens.Black, 0, -logdist, distX, -logdist)
+                g.DrawLine(myMinorPen, 0, -logdist, distX, -logdist)
 
             Next
         Next
 
-        'teken het punt P,V
+        'teken region borders 
+       
 
+        If (mediumgroup = type_medium.medium1) Then
+
+            DrawBorderLine(g, 0.03, 0.1, 1000000.0, 0.1)
+            DrawBorderLine(g, 0.03, 0.1, 0.03, 350.0)
+
+            DrawBorderLine(g, 0.03, 10, 5, 10)
+            DrawBorderLine(g, 5, 10, 31.25, 1.6)
+            DrawBorderLine(g, 31.25, 1.6, 625, 1.6)
+            DrawBorderLine(g, 625, 1.6, 10000.0, 0.1)
+
+
+        ElseIf (mediumgroup = type_medium.medium2) Then
+
+            DrawBorderLine(g, 0.03, 0.1, 1000000.0, 0.1)
+            DrawBorderLine(g, 0.03, 0.1, 0.03, 350)
+
+            DrawBorderLine(g, 0.03, 10, 50, 10)
+            DrawBorderLine(g, 0.03, 1.6, 3125, 1.6)
+
+            DrawBorderLine(g, 50, 10, 312.5, 1.6)
+            DrawBorderLine(g, 3125, 1.6, 50000, 0.1)
+
+
+
+        End If
+
+        'teken tekst in regions
+        If (mediumgroup = type_medium.medium2) Then
+            g.DrawString(type_category.classI.ToString, TextFont1, TextBrush1, 70, -100)
+        End If
+
+        g.DrawString(type_category.classII.ToString, TextFont1, TextBrush1, 70, -140)
+        g.DrawString(type_category.classIII.ToString, TextFont1, TextBrush1, 300, -220)
+
+        'if there is a valid point we can draw it 
+        If bValid Then
+            DrawPoint(g, P, V)
+        End If
+
+
+    End Sub
+    Private Sub DrawPoint(g As Graphics, ByVal P As Double, ByVal V As Double)
+
+        'teken het punt P,V-----------------
+        Dim distX As Integer = PictureBox1.Width - gmargin * 2
+        Dim distY = PictureBox1.Height - gmargin * 2
 
         Dim myPoint As New Point
 
-        myPoint.X = Int(Math.Log10(V) / (numX - 1) * distX)
-        myPoint.Y = -Int(Math.Log10(P) / (numY - 1) * distY)
-        Debug.Print(myPoint.ToString)
+        myPoint.X = Int((Math.Log10(V) + 2) * distX / numX)
+        myPoint.Y = -Int((Math.Log10(P) + 2) * distY / numY)
+        '  Debug.Print(myPoint.ToString)
 
-        g.FillEllipse(Brushes.Crimson, myPoint.X, myPoint.Y, 5, 5)
-       
+        Dim pointsize As Integer = 5
+        myPoint.X = Int(myPoint.X - pointsize / 2)
+        myPoint.Y = Int(myPoint.Y - pointsize / 2)
+
+
+        g.FillEllipse(Brushes.Crimson, myPoint.X, myPoint.Y, pointsize, pointsize)
+
     End Sub
 
+    Private Sub DrawBorderLine(g As Graphics, X1 As Double, Y1 As Double, X2 As Double, Y2 As Double)
+
+        Dim distX As Integer = PictureBox1.Width - gmargin * 2
+        Dim distY = PictureBox1.Height - gmargin * 2
+
+        Dim P1, P2 As Point
+
+        P1.X = Int((Math.Log10(X1) + 2) * distX / numX)
+        P1.Y = -Int((Math.Log10(Y1) + 2) * distY / numY)
+
+        P2.X = Int((Math.Log10(X2) + 2) * distX / numX)
+        P2.Y = -Int((Math.Log10(Y2) + 2) * distY / numY)
+
+        Dim myPen As New Pen(Brushes.Black, 2)
+
+        g.DrawLine(myPen, P1, P2)
+
+    End Sub
 
     Private Sub PrintResults()
 
@@ -208,20 +329,7 @@
         RichTextBox1.AppendText("Vessel category = " & vesselcategory.ToString & vbCrLf)
 
         RichTextBox1.AppendText("Licensing level = " & licensinglevel.ToString & vbCrLf)
-        'Select Case licensinglevel
 
-        '    Case type_licensing.A1
-        '        RichTextBox1.AppendText(licensinglevel.ToString & vbCrLf)
-        '    Case type_licensing.A2
-        '        RichTextBox1.AppendText("group = " & s & vbCrLf)
-        '    Case type_licensing.D1
-        '        RichTextBox1.AppendText("Medium group = " & s & vbCrLf)
-        '    Case type_licensing.D2
-        '        RichTextBox1.AppendText("Medium group = " & s & vbCrLf)
-
-
-
-        'End Select
 
 
 
@@ -235,29 +343,17 @@
         PV = P * V
 
         'for medium group 1
-        If (PV < 2.5 And V < 25) Or (P < 0.1) Then
+        If (V < 0.03) Or (P < 0.1) Then
             myCategory = type_category.class0
 
         Else
-            If (V < 25) Then
-                myCategory = type_category.classI
+            If (P < 10 And PV < 50.0) Then
+                myCategory = type_category.classII
             Else
-                If (P < 10 And V < 5000.0) Then
+                If (P < 1.6 And PV < 1000.0) Then
                     myCategory = type_category.classII
                 Else
-                    If (P < 10 And PV < 50000.0 And V < 31250) Then
-                        myCategory = type_category.classII
-                    Else
-                        If (P < 1.6 And V < 600000.0) Then
-                            myCategory = type_category.classII
-                        Else
-                            If (P < 1.6 And PV < 1000000.0 And V < 10000000.0) Then
-                                myCategory = type_category.classII
-                            Else
-                                myCategory = type_category.classIII
-                            End If
-                        End If
-                    End If
+                    myCategory = type_category.classIII
 
                 End If
             End If
@@ -277,31 +373,19 @@
         PV = P * V
 
         'for medium group 2
-        If (PV < 2.5 And V < 25) Or (P < 0.1) Then
+        If (V < 0.03) Or (P < 0.1) Then
             myCategory = type_category.class0
 
         Else
-            If (V < 25) Then
+            If (P < 1.6 And PV < 5000) Then
                 myCategory = type_category.classI
             Else
-                If (P < 1.6 And V < 3125000.0) Then
-                    myCategory = type_category.classI
+                If (P < 10 And PV < 500) Then
+                    myCategory = type_category.classII
                 Else
-                    If (P < 1.6 And PV < 5000000.0 And V < 500000.0) Then
-                        myCategory = type_category.classI
-                    Else
-                        If (P < 10 And V < 50000.0) Then
-                            myCategory = type_category.classII
-                        Else
-                            If (P < 10 And PV < 50000.0 And V < 312500) Then
-                                myCategory = type_category.classII
-                            Else
-                                myCategory = type_category.classIII
-                            End If
-                        End If
-                    End If
-
+                    myCategory = type_category.classIII
                 End If
+
             End If
         End If
 
@@ -309,4 +393,11 @@
 
     End Function
 
+    Private Sub PictureBox1_Paint(sender As Object, e As PaintEventArgs) Handles PictureBox1.Paint
+
+        DrawPicture(e.Graphics)
+
+    End Sub
+
+   
 End Class

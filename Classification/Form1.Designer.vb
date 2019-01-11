@@ -82,9 +82,9 @@ Partial Class Form1
         Me.Label3.Font = New System.Drawing.Font("Arial", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label3.Location = New System.Drawing.Point(23, 188)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(70, 16)
+        Me.Label3.Size = New System.Drawing.Size(81, 16)
         Me.Label3.TabIndex = 4
-        Me.Label3.Text = "Volume (L)"
+        Me.Label3.Text = "Volume (m3)"
         '
         'TextBox1
         '
@@ -145,10 +145,10 @@ Partial Class Form1
         Me.Label5.AutoSize = True
         Me.Label5.Location = New System.Drawing.Point(29, 43)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(520, 13)
+        Me.Label5.Size = New System.Drawing.Size(495, 13)
         Me.Label5.TabIndex = 11
-        Me.Label5.Text = "according to TSG R0004-2009 Supervision Regulations on Safety Technology for Stat" & _
-    "ionary Pressure Vessel"
+        Me.Label5.Text = "according to TSG 21-2016 Supervision Regulation on Safety Technology for Stationa" &
+    "ry Pressure Vessel"
         '
         'Form1
         '

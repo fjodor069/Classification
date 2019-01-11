@@ -8,3 +8,14 @@ D:\Eigen\Classification\Classification\obj\Debug\Classification.vbproj.GenerateR
 D:\Eigen\Classification\Classification\obj\Debug\Classification.exe
 D:\Eigen\Classification\Classification\obj\Debug\Classification.xml
 D:\Eigen\Classification\Classification\obj\Debug\Classification.pdb
+D:\Programs\Classification\Classification\bin\Debug\Classification.exe.config
+D:\Programs\Classification\Classification\obj\Debug\Classification.exe
+D:\Programs\Classification\Classification\obj\Debug\Classification.xml
+D:\Programs\Classification\Classification\obj\Debug\Classification.pdb
+D:\Programs\Classification\Classification\bin\Debug\Classification.exe
+D:\Programs\Classification\Classification\bin\Debug\Classification.pdb
+D:\Programs\Classification\Classification\bin\Debug\Classification.xml
+D:\Programs\Classification\Classification\obj\Debug\Classification.Form1.resources
+D:\Programs\Classification\Classification\obj\Debug\Classification.Resources.resources
+D:\Programs\Classification\Classification\obj\Debug\Classification.vbproj.GenerateResource.Cache
+D:\Programs\Classification\Classification\obj\Debug\Classification.vbprojResolveAssemblyReference.cache
