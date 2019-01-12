@@ -19,3 +19,15 @@ D:\Programs\Classification\Classification\obj\Release\Classification.vbprojResol
 D:\Programs\Classification\Classification\obj\Release\Classification.Form1.resources
 D:\Programs\Classification\Classification\obj\Release\Classification.Resources.resources
 D:\Programs\Classification\Classification\obj\Release\Classification.vbproj.GenerateResource.Cache
+C:\Users\Ronald\Documents\Visual Studio Projects\VB\Classification\Classification\bin\Release\Classification.exe.config
+C:\Users\Ronald\Documents\Visual Studio Projects\VB\Classification\Classification\bin\Release\Classification.exe
+C:\Users\Ronald\Documents\Visual Studio Projects\VB\Classification\Classification\bin\Release\Classification.pdb
+C:\Users\Ronald\Documents\Visual Studio Projects\VB\Classification\Classification\bin\Release\Classification.xml
+C:\Users\Ronald\Documents\Visual Studio Projects\VB\Classification\Classification\obj\Release\Classification.vbprojAssemblyReference.cache
+C:\Users\Ronald\Documents\Visual Studio Projects\VB\Classification\Classification\obj\Release\Classification.Form1.resources
+C:\Users\Ronald\Documents\Visual Studio Projects\VB\Classification\Classification\obj\Release\Classification.Resources.resources
+C:\Users\Ronald\Documents\Visual Studio Projects\VB\Classification\Classification\obj\Release\Classification.vbproj.GenerateResource.cache
+C:\Users\Ronald\Documents\Visual Studio Projects\VB\Classification\Classification\obj\Release\Classification.vbproj.CoreCompileInputs.cache
+C:\Users\Ronald\Documents\Visual Studio Projects\VB\Classification\Classification\obj\Release\Classification.exe
+C:\Users\Ronald\Documents\Visual Studio Projects\VB\Classification\Classification\obj\Release\Classification.xml
+C:\Users\Ronald\Documents\Visual Studio Projects\VB\Classification\Classification\obj\Release\Classification.pdb

@@ -6,17 +6,6 @@ Classification
 </name>
 </assembly>
 <members>
-<member name="T:Classification.Form1.type_medium">
- <summary>
- 'this class implements the classification for pressure vessels
- according to the Chinese Manufacturing Licensing of Pressure Vessels;
- TSG R0004-2009 Supervision Regulations on Safety Technology for Stationary Pressure Vessel
- fig. A1 and A2
- update for TSG 21-2016 
- fig A1 and A2 are changed
- </summary>
- <remarks></remarks>
-</member>
 <member name="T:Classification.My.Resources.Resources">
 <summary>
   A strongly-typed resource class, for looking up localized strings, etc.
@@ -32,6 +21,17 @@ Classification
   Overrides the current thread's CurrentUICulture property for all
   resource lookups using this strongly typed resource class.
 </summary>
+</member>
+<member name="T:Classification.Form1.type_medium">
+ <summary>
+ 'this class implements the classification for pressure vessels
+ according to the Chinese Manufacturing Licensing of Pressure Vessels;
+ TSG R0004-2009 Supervision Regulations on Safety Technology for Stationary Pressure Vessel
+ fig. A1 and A2
+ update for TSG 21-2016 
+ fig A1 and A2 are changed
+ </summary>
+ <remarks></remarks>
 </member>
 </members>
 </doc>
